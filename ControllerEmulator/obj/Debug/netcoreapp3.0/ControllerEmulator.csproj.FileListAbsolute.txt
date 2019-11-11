@@ -1,0 +1,11 @@
+C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\bin\Debug\netcoreapp3.0\ControllerEmulator.exe
+C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\bin\Debug\netcoreapp3.0\ControllerEmulator.deps.json
+C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\bin\Debug\netcoreapp3.0\ControllerEmulator.runtimeconfig.json
+C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\bin\Debug\netcoreapp3.0\ControllerEmulator.runtimeconfig.dev.json
+C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\bin\Debug\netcoreapp3.0\ControllerEmulator.dll
+C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\bin\Debug\netcoreapp3.0\ControllerEmulator.pdb
+C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\obj\Debug\netcoreapp3.0\ControllerEmulator.csprojAssemblyReference.cache
+C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\obj\Debug\netcoreapp3.0\ControllerEmulator.AssemblyInfoInputs.cache
+C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\obj\Debug\netcoreapp3.0\ControllerEmulator.AssemblyInfo.cs
+C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\obj\Debug\netcoreapp3.0\ControllerEmulator.dll
+C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\obj\Debug\netcoreapp3.0\ControllerEmulator.pdb
