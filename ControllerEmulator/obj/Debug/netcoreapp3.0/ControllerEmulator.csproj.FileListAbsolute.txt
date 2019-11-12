@@ -9,3 +9,5 @@ C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\obj\Debug\net
 C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\obj\Debug\netcoreapp3.0\ControllerEmulator.AssemblyInfo.cs
 C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\obj\Debug\netcoreapp3.0\ControllerEmulator.dll
 C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\obj\Debug\netcoreapp3.0\ControllerEmulator.pdb
+C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\bin\Debug\netcoreapp3.0\Newtonsoft.Json.dll
+C:\Users\sharov\source\repos\ControllerEmulator\ControllerEmulator\obj\Debug\netcoreapp3.0\ControllerEmulator.csproj.CopyComplete

@@ -7,9 +7,17 @@ namespace ControllerEmulator
         static void Main(string[] args)
         {
             ControllerConnection controllerConnection = new ControllerConnection();
-            controllerConnection.Send("2db09b37-2f56-47ce-5722-08d761eef482");
-            controllerConnection.Send("<{connection check}>");
-            controllerConnection.Recive();
+            bool status = false;
+            
+            ControllerCommands.TokenAuth(controllerConnection, out status);
+            ControllerCommands.StartLisen(controllerConnection);
+
+            ControllerCommands.Check(controllerConnection, out status);
+            ControllerCommands.TVDevice(controllerConnection);
+
+            
+            Console.WriteLine(controllerConnection.ReadRecive());
+            
 
         }
     }

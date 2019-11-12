@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
+using System.IO;
 
 namespace ControllerEmulator
 {
@@ -37,15 +39,39 @@ namespace ControllerEmulator
                 GetNetworkStream(controllerConnection);
             byte[] byteMessage = MessageToByte(message);
             await networkStream.WriteAsync(byteMessage, 0, byteMessage.Length);
-
         }
 
-        public async void Recive()
+
+        private string Lisener(NetworkStream networkStream)
+        {
+            
+                if (networkStream != null)
+                {
+                    byte[] byteRecive = new byte[1024];
+                    int bytes = networkStream.Read(byteRecive, 0, byteRecive.Length);
+                    return ASCIIEncoding.ASCII.GetString(byteRecive, 0, bytes);
+                }
+                else
+                    return null;
+
+        }
+        public void Lisener()
+        {
+            while (true)
+            {
+                NetworkStream networkStream = this.networkStream;
+                Task.Run(() => Lisener(networkStream));
+            }
+
+        }
+        
+
+        public string ReadRecive()
         {
             NetworkStream networkStream = this.networkStream;
             byte[] byteRecive = new byte[256];
-            int bytes = await networkStream.ReadAsync(byteRecive, 0, byteRecive.Length);
-            Console.WriteLine(ASCIIEncoding.ASCII.GetString(byteRecive, 0, bytes));
+            int bytes = networkStream.Read(byteRecive, 0, byteRecive.Length);
+            return ASCIIEncoding.ASCII.GetString(byteRecive, 0, bytes);
         }
 
         private void GetNetworkStream(ControllerConnection controllerConnection)

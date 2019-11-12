@@ -23,15 +23,40 @@ namespace ControllerEmulator
         public ConnectionPropities GetConnect()
         {
             if (!System.IO.File.Exists(Path.Combine(path, "connect.json")))
-                CreateConnectPropities();   
+                CreateConnectPropities();
             return ReadConnectPropities();
+        }
+
+        public ControllerPropities GetControllerPropities()
+        {
+            if (!System.IO.File.Exists(Path.Combine(path, "controller.json")))
+                CreateControllerPropities();
+            return ReadControllerPropities();
+        }
+
+        public TVDevicePropities GetTVDevicePropities()
+        {
+            if (!System.IO.File.Exists(Path.Combine(path, "tv.json")))
+                CreateTVDevicePropities();
+            return ReadTVDevicePropities();
         }
 
         private void CreateConnectPropities()
         {
-            JSON.CreateEmptyConnect(Path.Combine(path, "connect.json"));
-            //do создание джесона по шаблону
+            JSON.CreateEmptyConnectionPripities(Path.Combine(path, "connect.json"));
             Console.WriteLine("Connection json was generated. Please enter valid data");
+        }
+
+        private void CreateControllerPropities()
+        {
+            JSON.CreateEmptyControllerPropities(Path.Combine(path, "controller.json"));
+            Console.WriteLine("Controller json was generated. Please enter valid token");
+        }
+
+        private void CreateTVDevicePropities()
+        {
+            JSON.CreateEmptyTVDevicePropities(Path.Combine(path, "tv.json"));
+            Console.WriteLine("TV json was generated. Please enter valid data");
         }
 
         private ConnectionPropities ReadConnectPropities()
@@ -39,6 +64,15 @@ namespace ControllerEmulator
             return JSON.ReadConnection(Path.Combine(path, "connect.json"));
         }
 
+        private ControllerPropities ReadControllerPropities()
+        { 
+            return JSON.ReadControllerPropities(Path.Combine(path, "controller.json"));
+        }
+
+        private TVDevicePropities ReadTVDevicePropities()
+        {
+            return JSON.ReadTVDevicePropities(Path.Combine(path, "tv.json"));
+        }
 
 
     }
