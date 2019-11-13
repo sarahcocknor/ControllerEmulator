@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 
 namespace ControllerEmulator
@@ -10,11 +9,11 @@ namespace ControllerEmulator
     {
         public string path;
 
+
         public Propities()
         {
             path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);                
             Directory.SetCurrentDirectory(path);
-            DirectoryInfo directoryInfo = new DirectoryInfo(path);
             path = Path.Combine(path, "propities");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
@@ -34,7 +33,7 @@ namespace ControllerEmulator
             return ReadControllerPropities();
         }
 
-        public TVDevicePropities GetTVDevicePropities()
+        public List<TVDevicePropities> GetTVDevicePropities()
         {
             if (!System.IO.File.Exists(Path.Combine(path, "tv.json")))
                 CreateTVDevicePropities();
@@ -43,37 +42,43 @@ namespace ControllerEmulator
 
         private void CreateConnectPropities()
         {
-            JSON.CreateEmptyConnectionPripities(Path.Combine(path, "connect.json"));
+            JsonWorker.CreateEmptyConnectionPripities(Path.Combine(path, "connect.json"));
             Console.WriteLine("Connection json was generated. Please enter valid data");
         }
 
         private void CreateControllerPropities()
         {
-            JSON.CreateEmptyControllerPropities(Path.Combine(path, "controller.json"));
+            JsonWorker.CreateEmptyControllerPropities(Path.Combine(path, "controller.json"));
             Console.WriteLine("Controller json was generated. Please enter valid token");
         }
 
         private void CreateTVDevicePropities()
         {
-            JSON.CreateEmptyTVDevicePropities(Path.Combine(path, "tv.json"));
+            ControllerPropities controllerPropities;
+            controllerPropities = JsonWorker.ReadControllerPropities(Path.Combine(path, "controller.json"));
+            JsonWorker.CreateEmptyTVDevicePropities(Path.Combine(path, "tv.json"), controllerPropities);
             Console.WriteLine("TV json was generated. Please enter valid data");
         }
 
         private ConnectionPropities ReadConnectPropities()
         {
-            return JSON.ReadConnection(Path.Combine(path, "connect.json"));
+            return JsonWorker.ReadConnection(Path.Combine(path, "connect.json"));
         }
 
         private ControllerPropities ReadControllerPropities()
         { 
-            return JSON.ReadControllerPropities(Path.Combine(path, "controller.json"));
+            return JsonWorker.ReadControllerPropities(Path.Combine(path, "controller.json"));
         }
 
-        private TVDevicePropities ReadTVDevicePropities()
+        private List<TVDevicePropities> ReadTVDevicePropities()
         {
-            return JSON.ReadTVDevicePropities(Path.Combine(path, "tv.json"));
+            return JsonWorker.ReadTVDevicePropities(Path.Combine(path, "tv.json"));
         }
 
+        public void SaveTVDevices(List<TVDevicePropities> tVs)
+        {
+            JsonWorker.DeviceSave(JsonWorker.SerializeTVDevicePropities(tVs), Path.Combine(path, "tv.json"));
+        }
 
     }
 }

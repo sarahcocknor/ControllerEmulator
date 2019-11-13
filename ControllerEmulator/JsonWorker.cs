@@ -6,11 +6,12 @@ using Newtonsoft.Json;
 
 namespace ControllerEmulator
 {
-    class JSON
+    static class JsonWorker
     {
-
+        
         public static void CreateEmptyConnectionPripities(string path)
         {
+
             ConnectionPropities connectionPropities = new ConnectionPropities() { ip = "127.0.0.1", port = 8002 };
             string json = JsonConvert.SerializeObject(connectionPropities);
             Save(json, path);
@@ -19,18 +20,30 @@ namespace ControllerEmulator
 
         public static void CreateEmptyControllerPropities(string path)
         {
-            ControllerPropities controllerPropities = new ControllerPropities() { token = "controller-token-here"};
+            ControllerPropities controllerPropities = new ControllerPropities() { token = "controller-token-here", deviceTvCount = 3};
             string json = JsonConvert.SerializeObject(controllerPropities);
             Save(json, path);
             Console.WriteLine(json);
         }
 
-        public static void CreateEmptyTVDevicePropities(string path)
+        public static void CreateEmptyTVDevicePropities(string path, ControllerPropities controllerPropities)
         {
-            TVDevicePropities tv = new TVDevicePropities() { deviceId = "device-id-here", status = true, errorCode = GlobalPropities.ErrorCode.None, errorMessage = "ok" , input = TVDevicePropities.Input.DVI1, power = TVDevicePropities.Power.True, _volume = 50, volumeMute = false };
-            string json = JsonConvert.SerializeObject(tv);
+            uint i = controllerPropities.deviceTvCount;
+            List<TVDevicePropities> tvList = new List<TVDevicePropities>();
+            do
+            {
+                tvList.Add(new TVDevicePropities() { deviceId = "device-id-here", status = true, errorCode = GlobalPropities.ErrorCode.None, errorMessage = "ok", input = TVDevicePropities.Input.DVI1, power = TVDevicePropities.Power.True, _volume = 50, volumeMute = false });
+                i--;
+            }
+            while (i != 0);
+            string json = JsonConvert.SerializeObject(tvList);
             Save(json, path);
             Console.WriteLine(json);
+        }
+
+        public static string SerializeTVDevicePropities(List<TVDevicePropities> tVs)
+        {
+            return JsonConvert.SerializeObject(tVs);
         }
 
         public static void Save(string json, string path)
@@ -69,14 +82,23 @@ namespace ControllerEmulator
             }
         }
 
-        public static TVDevicePropities ReadTVDevicePropities(string path)
+        public static List<TVDevicePropities> ReadTVDevicePropities(string path)
         {
             using (StreamReader streamReader = new StreamReader(path))
             {
                 string json = streamReader.ReadToEnd();
-                TVDevicePropities tVDevicePropities = JsonConvert.DeserializeObject<TVDevicePropities>(json);
-                return tVDevicePropities;
+                return JsonConvert.DeserializeObject<List<TVDevicePropities>>(json);
             }
+        }
+
+        public static ServerMessage ReadServerMessage(string message)
+        { 
+            return JsonConvert.DeserializeObject<ServerMessage>(message);
+        }
+
+        public static void DeviceSave(string json, string path )
+        {
+            Save(json, path);
         }
 
 
