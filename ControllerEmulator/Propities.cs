@@ -80,5 +80,18 @@ namespace ControllerEmulator
             JsonWorker.DeviceSave(JsonWorker.SerializeTVDevicePropities(tVs), Path.Combine(path, "tv.json"));
         }
 
+        public string DeviceToServerMessage(object? device)
+        {
+            string json = JsonWorker.SerializeDevice(device);
+            int indexOfEndFirstJson = json.IndexOf(",\"input");
+            json = json.Remove(indexOfEndFirstJson, 1);
+            json = json.Insert(indexOfEndFirstJson, "}|{");
+            json = json.Insert(0, "<");
+            json = json.Insert(json.Length, ">");
+            return json;
+
+
+        }
+
     }
 }

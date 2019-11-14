@@ -13,9 +13,10 @@ namespace ControllerEmulator
 
             //change
             List<TVDevicePropities> tVDevicePropities = ServerMessage.ChangeParam(messege);
-
             //send
-            //Console.WriteLine("CHANGED: " + );
+            string m = ServerMessage.ChangeParamSending(tVDevicePropities, messege);
+            Console.WriteLine("SENDING: " + m);
+            controllerConnection.Send(m);
 
             //save
             tvdevice.SaveTVDevices(tVDevicePropities);

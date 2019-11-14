@@ -16,20 +16,44 @@ namespace ControllerEmulator
             Propities propities = new Propities();
             List<TVDevicePropities> tVDevicePropities = propities.GetTVDevicePropities();
 
-            ServerMessage m = JsonWorker.ReadServerMessage(message);
-            m.deviceid = m.deviceid.Trim('"');
-            m.param = m.param.Trim('"');
-            m.val = m.val.Trim('"');
+            ServerMessage m = ServerMessageConvert(message);
+
             TVDevicePropities curent = tVDevicePropities.Find(tVDevicePropities => tVDevicePropities.deviceId == m.deviceid);
 
 
             if (curent != null)
                 curent.ParamChange(m.param, m.val);
             else
-                Console.WriteLine("Device not foind in tv.json");
+                Console.WriteLine("Device not found in tv.json");
             return tVDevicePropities;
 
-            //поиск девайс айди и присваивание типа соответственно джейсону для этого нужно хранить лист устройств в одном списке нужно реализовать несколько устройств и читать их
         }
+
+        public static string ChangeParamSending(List<TVDevicePropities> tVDevicePropities, string message)
+        {
+            string json;
+            Propities propities = new Propities();
+            ServerMessage m = ServerMessageConvert(message);
+            TVDevicePropities curent = tVDevicePropities.Find(tVDevicePropities => tVDevicePropities.deviceId == m.deviceid);
+            
+            if (curent != null)
+                curent.ParamChange(m.param, m.val);
+            else
+                Console.WriteLine("Device not found in tv.json");
+            
+            //нужен метод свойств принимающий устройство и преобразующий его в строку джейсона воспринимаюмую сервером обязательно учеть что это object. вернуть его
+
+            return propities.DeviceToServerMessage(curent);
+        }
+
+        private static ServerMessage ServerMessageConvert(string message)
+        {
+            ServerMessage m = JsonWorker.ReadServerMessage(message);
+            m.deviceid = m.deviceid.Trim('"');
+            m.param = m.param.Trim('"');
+            m.val = m.val.Trim('"');
+            return m;
+        }
+
     }
 }

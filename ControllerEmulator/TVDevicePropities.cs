@@ -110,6 +110,9 @@ namespace ControllerEmulator
                 case "volumemute":
                     this.volumeMute = Convert.ToBoolean(value);
                     break;
+                default:
+                    Console.WriteLine("wrong parameter recived");
+                    break;
             }
                  
 

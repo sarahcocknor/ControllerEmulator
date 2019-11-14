@@ -101,6 +101,11 @@ namespace ControllerEmulator
             Save(json, path);
         }
 
+        public static string SerializeDevice(object? device)
+        {
+            return JsonConvert.SerializeObject(device);
+        }
+
 
 
     }
