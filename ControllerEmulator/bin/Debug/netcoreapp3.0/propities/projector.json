@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 [{"deviceId":"780c8b08-a997-466d-b0d9-08d76c0d8a69","status":true,"errorCode":0,"errorMessage":"ok","lamphours":50,"lampStatus":1,"input":1,"power":1},{"deviceId":"device-id-here","status":true,"errorCode":0,"errorMessage":"ok","lamphours":50,"lampStatus":1,"input":6,"power":1},{"deviceId":"device-id-here","status":true,"errorCode":0,"errorMessage":"ok","lamphours":50,"lampStatus":1,"input":6,"power":1}]
+=======
+[{"deviceId":"780c8b08-a997-466d-b0d9-08d76c0d8a69","status":true,"errorCode":0,"errorMessage":"ok","lamphours":50,"lampStatus":1,"input":1,"power":4},{"deviceId":"device-id-here","status":true,"errorCode":0,"errorMessage":"ok","lamphours":50,"lampStatus":1,"input":6,"power":1},{"deviceId":"device-id-here","status":true,"errorCode":0,"errorMessage":"ok","lamphours":50,"lampStatus":1,"input":6,"power":1}]
+>>>>>>> ebae88adec8ba85ce51d7ee12f8038ccf660d0c0
