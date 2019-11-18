@@ -6,6 +6,14 @@ namespace ControllerEmulator
 {
     static class ControllerCommands
     {
+        public static void Reconect()
+        {
+            ControllerConnection controller = new ControllerConnection();
+
+            ControllerCommands.TokenAuth(controller);
+            ControllerCommands.StartLisen(controller);
+        }
+
         public static void Device(ControllerConnection controllerConnection, string message)
         {
             //on load try
@@ -21,7 +29,8 @@ namespace ControllerEmulator
             controllerConnection.Send(m);
 
             //save
-            device.SaveDevices(devicePropities);
+            if (devicePropities != null)
+                device.SaveDevices(devicePropities);
 
         }
 
@@ -76,6 +85,31 @@ namespace ControllerEmulator
         {
             controllerConnection.Send("<{connection check}>");
             status = CheckStatus(controllerConnection);
+        }
+
+        public static void FullSend(ControllerConnection controllerConnection)
+        {
+            Console.Write("Sending list of all devices...");
+
+            string deviceType;
+            Propities controller = new Propities();
+
+            List<TVDevicePropities> tVDevicePropities = controller.GetTVDevicePropities();          
+            deviceType = "tv.json";
+            foreach (TVDevicePropities tVDevice in tVDevicePropities)
+            {
+                controllerConnection.Send(controller.DeviceToServerMessage(tVDevice, deviceType));
+            }
+
+            List<ProjectorDevicePropities> projectorDevicePropities = controller.GetProjectorDevicePropities();
+            deviceType = "projector.json";
+            foreach (ProjectorDevicePropities projectorDevice in projectorDevicePropities)
+            {
+                controllerConnection.Send(controller.DeviceToServerMessage(projectorDevice, deviceType));
+            }
+
+            Console.WriteLine(" Done.");
+
         }
 
         private static bool CheckStatus(ControllerConnection controllerConnection)

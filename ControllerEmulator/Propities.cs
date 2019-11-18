@@ -156,6 +156,8 @@ namespace ControllerEmulator
 
         }
 
+
+
         public string GetTypeOfDevice(string deviceid)
         {
             List<string> devices = new List<string>();

@@ -8,6 +8,7 @@ using System.Net;
 using Quartz;
 using System.Collections.Specialized;
 using Quartz.Impl;
+using ControllerEmulator.Scheldues;
 
 namespace ControllerEmulator
 {
@@ -65,7 +66,8 @@ namespace ControllerEmulator
         {
             //try
             //{ 
-            StartScheldue(controllerConnection);
+            StartCheckScheldue(controllerConnection);
+            StartFullSendScheldue(controllerConnection);
             var controller = controllerConnection;
             while (true)
             {
@@ -83,13 +85,13 @@ namespace ControllerEmulator
                 On_Messege.Invoke(controller, builder.ToString());
                 
             }
-            /*}
-            catch (Exception e)
+            //}
+            /*catch (Exception e)
             {
                 EventArgs eventArgs = new EventArgs();
                 On_Exception.Invoke(e, eventArgs);
                 Console.WriteLine(e.Message);
-            } */
+            }*/
 
         }
 
@@ -111,11 +113,39 @@ namespace ControllerEmulator
             return System.Text.ASCIIEncoding.ASCII.GetBytes(message);
         }
 
-        private async static Task StartScheldue(object controllerConnection)
+        private async static Task StartFullSendScheldue(object controllerConnection)
         {
             var controller = controllerConnection;
 
             NameValueCollection props = new NameValueCollection {{ "quartz.serializer.type", "binary" }};
+            StdSchedulerFactory factory = new StdSchedulerFactory(props);
+            IScheduler scheduler = await factory.GetScheduler();
+            await scheduler.Start();
+
+            JobDataMap keyValuePairs = new JobDataMap();
+            keyValuePairs.Add("controllerConnection", controller);
+
+
+            IJobDetail job = JobBuilder.Create<FullSendScheldue>()
+                .UsingJobData(keyValuePairs)
+                .Build();
+
+
+            ITrigger trigger = TriggerBuilder.Create()
+                .StartNow()
+                .WithSimpleSchedule(x => x
+                    .WithIntervalInSeconds(10)
+                    .RepeatForever())
+                .Build();
+
+            await scheduler.ScheduleJob(job, trigger);
+        }
+
+        private async static Task StartCheckScheldue(object controllerConnection)
+        {
+            var controller = controllerConnection;
+
+            NameValueCollection props = new NameValueCollection { { "quartz.serializer.type", "binary" } };
             StdSchedulerFactory factory = new StdSchedulerFactory(props);
             IScheduler scheduler = await factory.GetScheduler();
             await scheduler.Start();

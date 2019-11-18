@@ -11,13 +11,9 @@ namespace ControllerEmulator.Scheldues
 
         public async Task Execute(IJobExecutionContext context)
         {
-            //full send here
-
             JobDataMap dataMap = context.MergedJobDataMap;
-
             ControllerConnection controllerConnection = (ControllerConnection)dataMap.Get("controllerConnection");
-
-            ControllerCommands.Check(controllerConnection);
+            ControllerCommands.FullSend(controllerConnection);
         }
     }
 }

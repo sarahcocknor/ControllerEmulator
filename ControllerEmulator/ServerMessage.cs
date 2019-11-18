@@ -15,6 +15,7 @@ namespace ControllerEmulator
         {
             Propities propities = new Propities();
             ServerMessage m = ServerMessageConvert(message);
+
             return propities.GetTypeOfDevice(m.deviceid);
         }
 
@@ -61,6 +62,7 @@ namespace ControllerEmulator
                     return listProj;
 
                 default:
+                    Console.WriteLine("Device with this token not found in devices");
                     return null;
             }
             

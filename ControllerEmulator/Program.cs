@@ -26,12 +26,16 @@ namespace ControllerEmulator
 
         private static void Controller_On_Exception(object sender, EventArgs e)
         {
-            //timer to reconect
-            controller = new ControllerConnection();
-            CheckScheldue scheduleJob = new CheckScheldue();
+            System.Timers.Timer timer = new System.Timers.Timer(30000);
+            timer.AutoReset = false;
+            timer.Enabled = true;
+            timer.Elapsed += Timer_Elapsed;
 
-            ControllerCommands.TokenAuth(controller);
-            ControllerCommands.StartLisen(controller);
+        }
+
+        private static void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            ControllerCommands.Reconect();
         }
 
         public static void OnMessage(object sender, string m)
