@@ -10,5 +10,7 @@ namespace ControllerEmulator
 
         public uint deviceTvCount { get; set; }
 
+        public uint deviceProjectorCount { get; set; }
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 
@@ -9,7 +10,7 @@ namespace ControllerEmulator
     static class JsonWorker
     {
         
-        public static void CreateEmptyConnectionPripities(string path)
+        public static void CreateEmptyConnectionPropities(string path)
         {
 
             ConnectionPropities connectionPropities = new ConnectionPropities() { ip = "127.0.0.1", port = 8002 };
@@ -20,7 +21,7 @@ namespace ControllerEmulator
 
         public static void CreateEmptyControllerPropities(string path)
         {
-            ControllerPropities controllerPropities = new ControllerPropities() { token = "controller-token-here", deviceTvCount = 3};
+            ControllerPropities controllerPropities = new ControllerPropities() { token = "controller-token-here", deviceTvCount = 3 , deviceProjectorCount = 2};
             string json = JsonConvert.SerializeObject(controllerPropities);
             Save(json, path);
             Console.WriteLine(json);
@@ -37,6 +38,21 @@ namespace ControllerEmulator
             }
             while (i != 0);
             string json = JsonConvert.SerializeObject(tvList);
+            Save(json, path);
+            Console.WriteLine(json);
+        }
+
+        public static void CreateEmptyProjectorPropities(string path, ControllerPropities controllerPropities)
+        {
+            uint i = controllerPropities.deviceProjectorCount;
+            List<ProjectorDevicePropities> list = new List<ProjectorDevicePropities>();
+            do
+            {
+                list.Add(new ProjectorDevicePropities() { deviceId = "device-id-here", status = true, errorCode = GlobalPropities.ErrorCode.None, errorMessage = "ok", input = ProjectorDevicePropities.Input.DVI1, power = ProjectorDevicePropities.Power.True, lamphours = 50, lampStatus = ProjectorDevicePropities.LampStatus.On });
+                i--;
+            }
+            while (i != 0);
+            string json = JsonConvert.SerializeObject(list);
             Save(json, path);
             Console.WriteLine(json);
         }
@@ -92,7 +108,10 @@ namespace ControllerEmulator
         }
 
         public static ServerMessage ReadServerMessage(string message)
-        { 
+        {
+            message = message.Trim('<'); message = message.Trim('[');
+            message = message.Trim('>'); message = message.Trim(']');
+            message = message.Replace("}|{", ",");
             return JsonConvert.DeserializeObject<ServerMessage>(message);
         }
 
@@ -104,6 +123,33 @@ namespace ControllerEmulator
         public static string SerializeDevice(object? device)
         {
             return JsonConvert.SerializeObject(device);
+        }
+
+        public static List<object> ReadDevices(string path)
+        {
+            using (StreamReader streamReader = new StreamReader(path))
+            {
+                string json = streamReader.ReadToEnd();
+                return JsonConvert.DeserializeObject<List<object>>(json);
+            }
+        }
+
+        public static string FirstInObject(object obj)
+        {
+            Newtonsoft.Json.Linq.JObject jObject = (Newtonsoft.Json.Linq.JObject) obj;
+            
+            return (string)jObject.First.First;
+        }
+
+        public static string FirstInObject(List<object> obj)
+        {
+            object current = obj.First<object>();
+            string sd = JsonConvert.SerializeObject(current);
+            Newtonsoft.Json.Linq.JObject jObject = null;
+            sd = sd.Remove(0, 13);
+            sd = sd.Remove(36);
+
+            return sd;
         }
 
 

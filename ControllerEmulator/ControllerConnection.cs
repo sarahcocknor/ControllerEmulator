@@ -28,15 +28,23 @@ namespace ControllerEmulator
 
         private TcpClient Connect()
         {
-            Propities connection = new Propities();
-            ConnectionPropities connectionPropities = connection.GetConnect();
 
-            TcpClient tcpClient = new TcpClient();
-            tcpClient.Connect(connectionPropities.ip, connectionPropities.port);
+            try
+            {
+                Propities connection = new Propities();
+                ConnectionPropities connectionPropities = connection.GetConnect();
 
+                TcpClient tcpClient = new TcpClient();
+                tcpClient.Connect(connectionPropities.ip, connectionPropities.port);
 
+                return tcpClient;
+            }
+            catch (Exception e)
+            {
 
-            return tcpClient;
+                Console.WriteLine(e.Message);
+                return null;
+            }
         }
 
         public void CloseConnection(ControllerConnection controllerConnection)
@@ -55,8 +63,8 @@ namespace ControllerEmulator
 
         public void LisenServer(object controllerConnection)
         {
-            try
-            { 
+            //try
+            //{ 
             StartScheldue(controllerConnection);
             var controller = controllerConnection;
             while (true)
@@ -75,13 +83,13 @@ namespace ControllerEmulator
                 On_Messege.Invoke(controller, builder.ToString());
                 
             }
-            }
+            /*}
             catch (Exception e)
             {
                 EventArgs eventArgs = new EventArgs();
                 On_Exception.Invoke(e, eventArgs);
                 Console.WriteLine(e.Message);
-            }
+            } */
 
         }
 
@@ -116,7 +124,7 @@ namespace ControllerEmulator
             keyValuePairs.Add("controllerConnection", controller);
 
 
-            IJobDetail job = JobBuilder.Create<ScheduleJob>()
+            IJobDetail job = JobBuilder.Create<CheckScheldue>()
                 .UsingJobData(keyValuePairs)
                 .Build();
 

@@ -6,20 +6,22 @@ namespace ControllerEmulator
 {
     static class ControllerCommands
     {
-        public static void TVDevice(ControllerConnection controllerConnection, string messege)
+        public static void Device(ControllerConnection controllerConnection, string message)
         {
             //on load try
-            Propities tvdevice = new Propities();
+            Propities device = new Propities();
 
             //change
-            List<TVDevicePropities> tVDevicePropities = ServerMessage.ChangeParam(messege);
+            string deviceType = ServerMessage.FindDevice(message);
+            List<object> devicePropities = ServerMessage.ChangeParam(message, deviceType);
+
             //send
-            string m = ServerMessage.ChangeParamSending(tVDevicePropities, messege);
+            string m = ServerMessage.ChangeParamSending(device.DeviceToServerMessage(devicePropities, deviceType), message);
             Console.WriteLine("SENDING: " + m);
             controllerConnection.Send(m);
 
             //save
-            tvdevice.SaveTVDevices(tVDevicePropities);
+            device.SaveDevices(devicePropities);
 
         }
 

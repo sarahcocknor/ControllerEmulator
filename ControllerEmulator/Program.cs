@@ -12,7 +12,7 @@ namespace ControllerEmulator
         static void Main(string[] args)
         {
             controller = new ControllerConnection();
-            ScheduleJob scheduleJob = new ScheduleJob();
+            CheckScheldue scheduleJob = new CheckScheldue();
 
             ControllerCommands.TokenAuth(controller);
             ControllerCommands.StartLisen(controller);
@@ -26,9 +26,9 @@ namespace ControllerEmulator
 
         private static void Controller_On_Exception(object sender, EventArgs e)
         {
-
+            //timer to reconect
             controller = new ControllerConnection();
-            ScheduleJob scheduleJob = new ScheduleJob();
+            CheckScheldue scheduleJob = new CheckScheldue();
 
             ControllerCommands.TokenAuth(controller);
             ControllerCommands.StartLisen(controller);
@@ -39,7 +39,7 @@ namespace ControllerEmulator
             Console.WriteLine(DateTime.Now.ToShortTimeString() + ": " + m);
             
             if (m.StartsWith('{'))
-                ControllerCommands.TVDevice(controller, m);
+                ControllerCommands.Device(controller, m);
 
         }
     }
