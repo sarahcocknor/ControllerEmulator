@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,23 +12,13 @@ namespace ControllerEmulator
 
         public uint deviceProjectorCount { get; set; }
 
-    }
-}
-=======
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+        public int fludInterval { get; set; }
 
-namespace ControllerEmulator
-{
-    class ControllerPropities
-    {
-        public string token { get; set; }
+        public int checkInterval { get; set; }
 
-        public uint deviceTvCount { get; set; }
+        public int errorRate { get; set; }
 
-        public uint deviceProjectorCount { get; set; }
+        public int projectroHourRate { get; set; }
 
     }
 }
->>>>>>> ebae88adec8ba85ce51d7ee12f8038ccf660d0c0
