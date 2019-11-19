@@ -18,7 +18,9 @@ namespace ControllerEmulator
 
         public int errorRate { get; set; }
 
-        public int projectroHourRate { get; set; }
+        public int projectorHourRate { get; set; }
+
+        public int reconectTimeOut { get; set; }
 
     }
 }

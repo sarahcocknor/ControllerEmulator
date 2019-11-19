@@ -98,7 +98,7 @@ namespace ControllerEmulator
                     this.volumeMute = Convert.ToBoolean(value);
                     break;
                 default:
-                    Console.WriteLine("wrong parameter recived");
+                    Console.WriteLine(DateTime.Now.ToShortTimeString() + " (WARNING): Wrong parameter recived from server");
                     break;
             }
                  

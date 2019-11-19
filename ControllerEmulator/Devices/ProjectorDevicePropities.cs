@@ -104,7 +104,7 @@ namespace ControllerEmulator
                     this.power = _power;
                     break;
                 default:
-                    Console.WriteLine("wrong parameter recived");
+                    Console.WriteLine(DateTime.Now.ToShortTimeString() + " (WARNING): Wrong parameter recived from server");
                     break;
             }
 

@@ -62,13 +62,17 @@ namespace ControllerEmulator
         private void CreateConnectPropities()
         {
             JsonWorker.CreateEmptyConnectionPropities(Path.Combine(path, "connect.json"));
-            Console.WriteLine("Connection json was generated. Please enter valid data");
+            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("-------Connection json was generated. Please enter valid data--------");
+            Console.WriteLine("---------------------------------------------------------------------");
         }
 
         private void CreateControllerPropities()
         {
             JsonWorker.CreateEmptyControllerPropities(Path.Combine(path, "controller.json"));
-            Console.WriteLine("Controller json was generated. Please enter valid token");
+            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("-------Controller json was generated. Please enter valid token-------");
+            Console.WriteLine("---------------------------------------------------------------------");
         }
 
         private void CreateTVDevicePropities()
@@ -76,7 +80,9 @@ namespace ControllerEmulator
             ControllerPropities controllerPropities;
             controllerPropities = JsonWorker.ReadControllerPropities(Path.Combine(path, "controller.json"));
             JsonWorker.CreateEmptyTVDevicePropities(Path.Combine(path, "tv.json"), controllerPropities);
-            Console.WriteLine("TV json was generated. Please enter valid data");
+            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("-----------TV json was generated. Please enter valid data------------");
+            Console.WriteLine("---------------------------------------------------------------------");
         }
 
         private void CreateProjectorPropities()
@@ -84,7 +90,9 @@ namespace ControllerEmulator
             ControllerPropities controllerPropities;
             controllerPropities = JsonWorker.ReadControllerPropities(Path.Combine(path, "controller.json"));
             JsonWorker.CreateEmptyProjectorPropities(Path.Combine(path, "projector.json"), controllerPropities);
-            Console.WriteLine("Projector json was generated. Please enter valid data");
+            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("--------Projector json was generated. Please enter valid data--------");
+            Console.WriteLine("---------------------------------------------------------------------");
         }
 
         private ConnectionPropities ReadConnectPropities()
@@ -168,6 +176,8 @@ namespace ControllerEmulator
             foreach (string cur in devices)
             {
                 List<object> listOfCurrentDevices = JsonWorker.ReadDevices(Path.Combine(path, cur));
+                if (Search(listOfCurrentDevices, "device-id-here"))
+                    Console.WriteLine(DateTime.Now.ToShortTimeString() + " (WARNING): In " + cur + " was found device without ID. Please correct controller.json or enter valid DeviceID");
                 if (Search(listOfCurrentDevices, deviceid))
                     deviceType = cur;
             }
@@ -192,6 +202,12 @@ namespace ControllerEmulator
             StartFullSendScheldue(controllerConnection);
             StartRandomScheldue(controllerConnection);
             LampHoursScheldue(controllerConnection);
+        }
+
+        public static void PauseScheldue(IScheduler scheldue)
+        {
+            scheldue.PauseAll();
+
         }
 
         private async Task StartFullSendScheldue(object controllerConnection)
@@ -222,6 +238,7 @@ namespace ControllerEmulator
                 .Build();
 
             await scheduler.ScheduleJob(job, trigger);
+            
         }
 
         private async Task StartCheckScheldue(object controllerConnection)
@@ -240,6 +257,7 @@ namespace ControllerEmulator
 
                 JobDataMap keyValuePairs = new JobDataMap();
                 keyValuePairs.Add("controllerConnection", controller);
+                
 
 
                 IJobDetail job = JobBuilder.Create<CheckScheldue>()
@@ -276,6 +294,7 @@ namespace ControllerEmulator
                 JobDataMap keyValuePairs = new JobDataMap();
                 keyValuePairs.Add("controllerConnection", controller);
                 keyValuePairs.Add("random", random);
+                keyValuePairs.Add("schelduler", scheduler);
 
 
                 IJobDetail job = JobBuilder.Create<ErrorSimulateScheldue>()
@@ -299,7 +318,7 @@ namespace ControllerEmulator
         {
 
             ControllerPropities controllerPropities = GetControllerPropities();
-            if (controllerPropities.projectroHourRate != 0)
+            if (controllerPropities.projectorHourRate != 0)
             {
                 Random random = new Random();
                 var controller = controllerConnection;
@@ -322,7 +341,7 @@ namespace ControllerEmulator
                 ITrigger trigger = TriggerBuilder.Create()
                     .StartNow()
                     .WithSimpleSchedule(x => x
-                        .WithIntervalInSeconds(3600 / controllerPropities.projectroHourRate)
+                        .WithIntervalInSeconds(3600 / controllerPropities.projectorHourRate)
                         .RepeatForever())
                     .Build();
 

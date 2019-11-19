@@ -35,7 +35,8 @@ namespace ControllerEmulator
                     if (currentTv != null)
                         currentTv.ParamChange(m.param, m.val);
                     else
-                        Console.WriteLine("Device not found in tv.json");
+                        Console.WriteLine(DateTime.Now.ToShortTimeString() + " (WARNING): Device not found in tv.json-----------------------");
+
 
                     List<object> listTv = new List<object>();
                     foreach (TVDevicePropities cur in tVDevicePropities)
@@ -52,7 +53,7 @@ namespace ControllerEmulator
                     if (currentProj != null)
                         currentProj.ParamChange(m.param, m.val);
                     else
-                        Console.WriteLine("Device not found in tv.json");
+                        Console.WriteLine(DateTime.Now.ToShortTimeString() + " (WARNING): Device not found in projector.json");
 
                     List<object> listProj = new List<object>();
                     foreach (ProjectorDevicePropities cur in projectorDevicePropities)
@@ -62,7 +63,7 @@ namespace ControllerEmulator
                     return listProj;
 
                 default:
-                    Console.WriteLine("Device with this token not found in devices");
+                    Console.WriteLine(DateTime.Now.ToShortTimeString() + " (WARNING): Device with recived token not found in devices");
                     return null;
             }
             
@@ -84,20 +85,19 @@ namespace ControllerEmulator
                     if (curentTv != null)
                         curentTv.ParamChange(m.param, m.val);
                     else
-                        Console.WriteLine("Device not found in tv.json");
+                        Console.WriteLine(DateTime.Now.ToShortTimeString() + " (WARNING): Device not found in tv.json");
 
                     return propities.DeviceToServerMessage(curentTv, currentDeviceType);
                 case "projector.json":
 
                     List<ProjectorDevicePropities> projectorDevicePropities = propities.GetProjectorDevicePropities();
-                    ProjectorDevicePropities currentProj = projectorDevicePropities.Find(projectorDevicePropities => projectorDevicePropities.deviceId == m.deviceid);
-                    //for projector here
+                    ProjectorDevicePropities currentProj = projectorDevicePropities.Find(projectorDevicePropities => projectorDevicePropities.deviceId == m.deviceid);  
 
                     if (currentProj != null)
                         currentProj.ParamChange(m.param, m.val);
                     else
-                        Console.WriteLine("Device not found in tv.json");
-                    
+                        Console.WriteLine(DateTime.Now.ToShortTimeString() + " (WARNING): Device not found in projector.json");
+
                     return propities.DeviceToServerMessage(currentProj, currentDeviceType);
                 default:
                     return null;

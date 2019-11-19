@@ -1,20 +1,21 @@
 ﻿using System;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Threading;
+using Quartz;
+using Quartz.Impl;
 
 namespace ControllerEmulator
 {
     class Program
     {
         private static ControllerConnection controller;
-
-
-        private static bool status = false;
-        static void Main(string[] args)
+        private static bool reconect = false;
+        static void Main()
         {
             controller = new ControllerConnection();
-            CheckScheldue scheduleJob = new CheckScheldue();
 
-            ControllerCommands.TokenAuth(controller);
+            ControllerCommands.TokenAuth(controller, reconect);
             ControllerCommands.StartLisen(controller);
             
             controller.On_Messege += OnMessage;
@@ -24,24 +25,30 @@ namespace ControllerEmulator
 
         private static void Controller_On_Exception(object sender, EventArgs e)
         {
-            System.Timers.Timer timer = new System.Timers.Timer(30000);
-            timer.AutoReset = false;
-            timer.Enabled = true;
-            timer.Elapsed += Timer_Elapsed;
+            Propities propities = new Propities();
 
-        }
+            reconect = true;
+            controller.reconect = true;
 
-        private static void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            ControllerCommands.Reconect();
+            ControllerCommands.StopLisen(controller);
+
+            Thread.Sleep( (propities.GetControllerPropities().reconectTimeOut/2) * 1000);
+            Main();
         }
 
         public static void OnMessage(object sender, string m)
         {
-            Console.WriteLine(DateTime.Now.ToShortTimeString() + ": " + m);
+            string[] marray = m.Split("\n");
+            if (marray[marray.Length - 1] == "")
+                marray = marray.Take(marray.Count() - 1).ToArray();
+            foreach (string current in marray)
+                Console.WriteLine(DateTime.Now.ToShortTimeString() + " (SERVER): " + current);
             
             if (m.StartsWith('{'))
                 ControllerCommands.Device(controller, m);
+
+            if (m == "authorization token not found\n")
+                ControllerCommands.TokenAuth(controller, reconect);
 
         }
     }

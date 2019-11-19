@@ -19,11 +19,16 @@ namespace ControllerEmulator
         public event EventHandler<string> On_Messege;
         public event EventHandler On_Exception;
 
+        public bool reconect = false;
         private Propities propities = new Propities();
-        NetworkStream networkStream;
-        readonly TcpClient client;
+        public NetworkStream networkStream;
+        readonly TcpClient client = null;
         public ControllerConnection()
         {
+            if (client != null)
+                client.Close();
+
+
             client = Connect();
         }
 
@@ -42,30 +47,41 @@ namespace ControllerEmulator
             }
             catch (Exception e)
             {
-
-                Console.WriteLine(e.Message);
+                EventArgs eventArgs = new EventArgs();
+                On_Exception.Invoke(e, eventArgs);
+                //Console.WriteLine(e.Message);
                 return null;
             }
         }
 
-        public void CloseConnection(ControllerConnection controllerConnection)
+        public void CloseConnection()
         {
-            controllerConnection.client.Close();
+            if (client != null)
+                this.client.Close();
+            if (networkStream != null)
+                networkStream.Close();
         }
 
         public async Task Send(string message)
         {
             var controllerConnection = this;
+            
+
             if (networkStream == null)
                 GetNetworkStream(controllerConnection);
             byte[] byteMessage = MessageToByte(message);
+            //debug
+            Console.WriteLine(DateTime.Now.ToShortTimeString() + " (CLIENT): " + message);
+            
+            //debug
             await networkStream.WriteAsync(byteMessage, 0, byteMessage.Length);
+
         }
 
         public void LisenServer(object controllerConnection)
         {
-            //try
-            //{ 
+            try
+            { 
             propities.StartScheldue(controllerConnection);
 
             var controller = controllerConnection;
@@ -85,22 +101,15 @@ namespace ControllerEmulator
                 On_Messege.Invoke(controller, builder.ToString());
                 
             }
-            //}
-            /*catch (Exception e)
+            }
+            catch (Exception e)
             {
+                Console.WriteLine(DateTime.Now.ToShortTimeString() + " (CRITYCAL): Connection was aborted. Reconect in " + propities.GetControllerPropities().reconectTimeOut + "s"); 
                 EventArgs eventArgs = new EventArgs();
                 On_Exception.Invoke(e, eventArgs);
-                Console.WriteLine(e.Message);
-            }*/
+                //Console.WriteLine(e.Message);
+            }
 
-        }
-
-        public string ReadRecive()
-        {
-            NetworkStream networkStream = this.networkStream;
-            byte[] byteRecive = new byte[256];
-            int bytes = networkStream.Read(byteRecive, 0, byteRecive.Length);
-            return ASCIIEncoding.ASCII.GetString(byteRecive, 0, bytes);
         }
 
         private void GetNetworkStream(ControllerConnection controllerConnection)

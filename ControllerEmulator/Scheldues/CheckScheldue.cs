@@ -12,7 +12,16 @@ namespace ControllerEmulator
         { 
             JobDataMap dataMap = context.MergedJobDataMap;
             ControllerConnection controllerConnection = (ControllerConnection) dataMap.Get("controllerConnection");
-            ControllerCommands.Check(controllerConnection);
+
+            /*
+            if (controllerConnection.reconect)
+            {
+                IScheduler schelduler = (IScheduler)dataMap.Get("schelduler");
+                Propities.PauseScheldue(schelduler);
+            } else*/
+                ControllerCommands.Check(controllerConnection);
+
+
         }
     }
 }

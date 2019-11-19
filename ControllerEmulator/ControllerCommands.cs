@@ -8,14 +8,6 @@ namespace ControllerEmulator
     static class ControllerCommands
     {
 
-        public static void Reconect()
-        {
-            ControllerConnection controller = new ControllerConnection();
-
-            ControllerCommands.TokenAuth(controller);
-            ControllerCommands.StartLisen(controller);
-        }
-
         public static void Device(ControllerConnection controllerConnection, string message)
         {
             //on load try
@@ -27,7 +19,7 @@ namespace ControllerEmulator
 
             //send
             string m = ServerMessage.ChangeParamSending(device.DeviceToServerMessage(devicePropities, deviceType), message);
-            Console.WriteLine("SENDING: " + m);
+            Console.WriteLine(DateTime.Now.ToShortTimeString() + " (SENDING): " + m);
             controllerConnection.Send(m);
 
             //save
@@ -42,39 +34,25 @@ namespace ControllerEmulator
             lisenThread.Start(controllerConnection);
         }
 
-        public static void StopLisen()
+        public static void StopLisen(ControllerConnection controllerConnection)
         {
-            //do
+            controllerConnection.CloseConnection();
         }
 
-        public static void TokenAuth(ControllerConnection controllerConnection)
+        public static void TokenAuth(ControllerConnection controllerConnection, bool reconect)
         {
+            
+            if (reconect)
+            {
+                Propities propities = new Propities();
+                Thread.Sleep( (propities.GetControllerPropities().reconectTimeOut / 2) * 1000 );
+            }
+                
+            Console.WriteLine(DateTime.Now.ToShortTimeString() + " (INFO): SENDING TOKEN");
             Propities controller = new Propities();
             ControllerPropities controllerPropities = controller.GetControllerPropities();
             controllerConnection.Send(controllerPropities.token);
-           
-        }
 
-        public static void TokenAuth(ControllerConnection controllerConnection, out bool status)
-        {
-            Propities controller = new Propities();
-            ControllerPropities controllerPropities = controller.GetControllerPropities();
-            controllerConnection.Send(controllerPropities.token);
-            status = TokenAuthStatus(controllerConnection);
-        }
-
-        private static bool TokenAuthStatus(ControllerConnection controllerConnection)
-        {
-            if (controllerConnection.ReadRecive() == "authorization completed\n")
-            {
-                Console.WriteLine("auth success");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("auth failed");
-                return false;
-            }
 
         }
 
@@ -82,16 +60,10 @@ namespace ControllerEmulator
         {
             controllerConnection.Send("<{connection check}>");
         }
-        
-        public static void Check(ControllerConnection controllerConnection, out bool status)
-        {
-            controllerConnection.Send("<{connection check}>");
-            status = CheckStatus(controllerConnection);
-        }
 
         public static void FullSend(ControllerConnection controllerConnection)
         {
-            Console.Write("Sending list of all devices...");
+            Console.WriteLine(DateTime.Now.ToShortTimeString() + " (INFO): Sending list of all devices");
 
             string deviceType;
             Propities controller = new Propities();
@@ -109,25 +81,10 @@ namespace ControllerEmulator
             {
                 controllerConnection.Send(controller.DeviceToServerMessage(projectorDevice, deviceType));
             }
-
-            Console.WriteLine(" Done.");
-
-        }
-
-        private static bool CheckStatus(ControllerConnection controllerConnection)
-        {
-            if (controllerConnection.ReadRecive() == "check successful\n")
-            {
-                Console.WriteLine("check success");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("check failed");
-                return false;
-            }
+            Console.WriteLine(DateTime.Now.ToShortTimeString() + " (INFO): Done");
 
         }
+
 
         public static void RandomError(ControllerConnection controllerConnection, Random random)
         {
@@ -137,7 +94,7 @@ namespace ControllerEmulator
             string message = null ;
             type = random.Next(2);
 
-            Console.WriteLine("Randomize error for type number " + type);
+            Console.WriteLine(DateTime.Now.ToShortTimeString() + " (INFO): Randomize error for type number " + type +"");
 
             string deviceType;
             Propities controller = new Propities();
@@ -169,8 +126,7 @@ namespace ControllerEmulator
             }
             controllerConnection.Send(message);
 
-            Console.WriteLine("Error sended: " + message);
-
+            Console.WriteLine(DateTime.Now.ToShortTimeString() + " (INFO): Error was sended");
 
         }
 
@@ -193,6 +149,7 @@ namespace ControllerEmulator
 
 
             List<object> list = new List<ProjectorDevicePropities>().Cast<object>().ToList();
+            list.InsertRange(0, projectorDevicePropities.Cast<object>().ToList());
 
             controller.SaveDevices(list);
 

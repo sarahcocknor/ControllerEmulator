@@ -16,15 +16,15 @@ namespace ControllerEmulator
             ConnectionPropities connectionPropities = new ConnectionPropities() { ip = "127.0.0.1", port = 8002 };
             string json = JsonConvert.SerializeObject(connectionPropities);
             Save(json, path);
-            Console.WriteLine(json);
+            //Console.WriteLine(json);
         }
 
         public static void CreateEmptyControllerPropities(string path)
         {
-            ControllerPropities controllerPropities = new ControllerPropities() { token = "controller-token-here", deviceTvCount = 3 , deviceProjectorCount = 2, fludInterval = 10, checkInterval = 0, errorRate = 5, projectroHourRate = 120};
+            ControllerPropities controllerPropities = new ControllerPropities() { token = "controller-token-here", deviceTvCount = 3 , deviceProjectorCount = 2, fludInterval = 10, checkInterval = 0, errorRate = 5, projectorHourRate = 360, reconectTimeOut = 40};
             string json = JsonConvert.SerializeObject(controllerPropities);
             Save(json, path);
-            Console.WriteLine(json);
+            //Console.WriteLine(json);
         }
 
         public static void CreateEmptyTVDevicePropities(string path, ControllerPropities controllerPropities)
@@ -39,7 +39,7 @@ namespace ControllerEmulator
             while (i != 0);
             string json = JsonConvert.SerializeObject(tvList);
             Save(json, path);
-            Console.WriteLine(json);
+            //Console.WriteLine(json);
         }
 
         public static void CreateEmptyProjectorPropities(string path, ControllerPropities controllerPropities)
@@ -54,7 +54,7 @@ namespace ControllerEmulator
             while (i != 0);
             string json = JsonConvert.SerializeObject(list);
             Save(json, path);
-            Console.WriteLine(json);
+            //Console.WriteLine(json);
         }
 
         public static string SerializeTVDevicePropities(List<TVDevicePropities> tVs)
