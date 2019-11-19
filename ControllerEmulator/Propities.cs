@@ -42,6 +42,7 @@ namespace ControllerEmulator
 
         public void GetAllDevices()
         {
+            GetControllerPropities();
             GetTVDevicePropities();
             GetProjectorDevicePropities();
         }
