@@ -47,9 +47,9 @@ namespace ControllerEmulator
             }
             catch (Exception e)
             {
-                EventArgs eventArgs = new EventArgs();
-                On_Exception.Invoke(e, eventArgs);
-                //Console.WriteLine(e.Message);
+                //EventArgs eventArgs = new EventArgs();
+                //On_Exception.Invoke(e, eventArgs);
+                Console.WriteLine(DateTime.Now.ToShortTimeString() + " (CRITYCAL): " +e.Message);
                 return null;
             }
         }
