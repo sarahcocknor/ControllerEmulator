@@ -197,9 +197,9 @@ namespace ControllerEmulator
             return false;
         }
 
-        public void StartScheldue(object controllerConnection)
+        public async void StartScheldue(object controllerConnection)
         {
-            StartCheckScheldue(controllerConnection);
+            await StartCheckScheldue(controllerConnection);
             StartFullSendScheldue(controllerConnection);
             StartRandomScheldue(controllerConnection);
             LampHoursScheldue(controllerConnection);
